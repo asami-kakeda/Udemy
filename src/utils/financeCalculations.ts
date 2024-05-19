@@ -18,5 +18,4 @@ export function financeCalculations(transactions: Transaction[]): Balance {
       balance: 0,
     }
   );
-  // {income:number,expense:number,balance:number}
 }
