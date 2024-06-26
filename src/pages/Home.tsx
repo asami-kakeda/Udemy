@@ -8,15 +8,19 @@ import { Transaction } from "../types";
 
 interface HomeProps {
   monthlyTransactions: Transaction[];
+  setCurrentMont: React.Dispatch<React.SetStateAction<Date>>;
 }
 
-const Home = ({ monthlyTransactions }: HomeProps) => {
+const Home = ({ monthlyTransactions, setCurrentMont }: HomeProps) => {
   return (
     <Box sx={{ display: "flex" }}>
       {/* 左側コンテンツ */}
       <Box sx={{ flexGrow: 1 }}>
         <MonthlySummary monthlyTransactions={monthlyTransactions} />
-        <Calender />
+        <Calender
+          monthlyTransactions={monthlyTransactions}
+          setCurrentMont={setCurrentMont}
+        />
       </Box>
 
       {/* 右側コンテンツ */}
