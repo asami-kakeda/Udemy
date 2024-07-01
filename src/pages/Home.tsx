@@ -1,10 +1,11 @@
 import { Box } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import MonthlySummary from "../components/MonthlySummary";
 import Calender from "../components/Calender";
 import TransactionMenu from "../components/TransactionMenu";
 import TransactionForm from "../components/TransactionForm";
 import { Transaction } from "../types";
+import { format } from "date-fns";
 
 interface HomeProps {
   monthlyTransactions: Transaction[];
@@ -12,6 +13,13 @@ interface HomeProps {
 }
 
 const Home = ({ monthlyTransactions, setCurrentMont }: HomeProps) => {
+  const today = format(new Date(), "yyyy-MM-dd");
+  const [currentDay, setCurrentDay] = useState(today);
+
+  const dailyTransactions = monthlyTransactions.filter((transaction) => {
+    return transaction.date === currentDay;
+  });
+  console.log(dailyTransactions);
   return (
     <Box sx={{ display: "flex" }}>
       {/* 左側コンテンツ */}
@@ -20,6 +28,7 @@ const Home = ({ monthlyTransactions, setCurrentMont }: HomeProps) => {
         <Calender
           monthlyTransactions={monthlyTransactions}
           setCurrentMont={setCurrentMont}
+          setCurrentDay={setCurrentDay}
         />
       </Box>
 

@@ -7,13 +7,19 @@ import { DatesSetArg, EventContentArg } from "@fullcalendar/core";
 import { calculateDailyBalances } from "../utils/financeCalculations";
 import { Balance, CalenderContent, Transaction } from "../types";
 import { formatCurrency } from "../utils/formatting";
+import interactionPlugin, { DateClickArg } from "@fullcalendar/interaction";
 
 interface CalenderProps {
   monthlyTransactions: Transaction[];
   setCurrentMont: React.Dispatch<React.SetStateAction<Date>>;
+  setCurrentDay: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const Calender = ({ monthlyTransactions, setCurrentMont }: CalenderProps) => {
+const Calender = ({
+  monthlyTransactions,
+  setCurrentMont,
+  setCurrentDay,
+}: CalenderProps) => {
   const events = [
     {
       title: "Meeting",
@@ -52,7 +58,6 @@ const Calender = ({ monthlyTransactions, setCurrentMont }: CalenderProps) => {
   const carenderEvents = createCalenderEvents(dailyBalances);
 
   const renderEventContent = (eventInfo: EventContentArg) => {
-    console.log(eventInfo);
     return (
       <div>
         <div className="money" id="event-income">
@@ -74,14 +79,19 @@ const Calender = ({ monthlyTransactions, setCurrentMont }: CalenderProps) => {
     setCurrentMont(datesetInfo.view.currentStart);
   };
 
+  const handleDateClick = (dateInfo: DateClickArg) => {
+    setCurrentDay(dateInfo.dateStr);
+  };
+
   return (
     <FullCalendar
       locale={jaLocale}
-      plugins={[dayGridPlugin]}
+      plugins={[dayGridPlugin, interactionPlugin]}
       initialView="dayGridMonth"
       events={carenderEvents}
       eventContent={renderEventContent}
       datesSet={handleDateSet}
+      dateClick={handleDateClick}
     />
   );
 };
