@@ -6,7 +6,8 @@ export type ExpenseCategory =
   | "住居費"
   | "交際費"
   | "娯楽"
-  | "交通費";
+  | "交通費"
+  | "給与";
 
 export interface Transaction {
   id: string;
