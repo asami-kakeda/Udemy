@@ -9,12 +9,14 @@ import { Balance, CalenderContent, Transaction } from "../types";
 import { formatCurrency } from "../utils/formatting";
 import interactionPlugin, { DateClickArg } from "@fullcalendar/interaction";
 import { useTheme } from "@mui/material";
+import { isSameMonth } from "date-fns";
 
 interface CalenderProps {
   monthlyTransactions: Transaction[];
   setCurrentMont: React.Dispatch<React.SetStateAction<Date>>;
   setCurrentDay: React.Dispatch<React.SetStateAction<string>>;
   currentDay: string;
+  today: string;
 }
 
 const Calender = ({
@@ -22,17 +24,18 @@ const Calender = ({
   setCurrentMont,
   setCurrentDay,
   currentDay,
+  today,
 }: CalenderProps) => {
   const theme = useTheme();
-  const events = [
-    {
-      title: "Meeting",
-      start: new Date(),
-      income: 300,
-      expense: 200,
-      balance: 200,
-    },
-  ];
+  // const events = [
+  //   {
+  //     title: "Meeting",
+  //     start: new Date(),
+  //     income: 300,
+  //     expense: 200,
+  //     balance: 200,
+  //   },
+  // ];
 
   const dailyBalances = calculateDailyBalances(monthlyTransactions);
 
@@ -86,7 +89,12 @@ const Calender = ({
   };
 
   const handleDateSet = (datesetInfo: DatesSetArg) => {
-    setCurrentMont(datesetInfo.view.currentStart);
+    const currentMonth = datesetInfo.view.currentStart;
+    setCurrentMont(currentMonth);
+    const todayDate = new Date();
+    if (isSameMonth(todayDate, currentMonth)) {
+      setCurrentDay(today);
+    }
   };
 
   const handleDateClick = (dateInfo: DateClickArg) => {
