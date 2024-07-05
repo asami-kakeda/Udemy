@@ -14,6 +14,16 @@ import CloseIcon from "@mui/icons-material/Close"; // 閉じるボタン用の�
 import FastfoodIcon from "@mui/icons-material/Fastfood"; //食事アイコン
 import { Controller, useForm } from "react-hook-form";
 import { co } from "@fullcalendar/core/internal-common";
+import { ExpenseCategory, IncomeCategory } from "../types";
+import AlarmIcon from "@mui/icons-material/Alarm";
+import AddHomeIcon from "@mui/icons-material/AddHome";
+import Diversity3Icon from "@mui/icons-material/Diversity3";
+import TrainIcon from "@mui/icons-material/Train";
+import SportsTennisIcon from "@mui/icons-material/SportsTennis";
+import WorkIconIcon from "@mui/icons-material/Work";
+import AddBusinessIcon from "@mui/icons-material/AddBusiness";
+import SavingsIcon from "@mui/icons-material/Savings";
+import HouseSidingIcon from "@mui/icons-material/HouseSiding";
 
 interface TransactionFormProps {
   onCloseForm: () => void;
@@ -23,12 +33,33 @@ interface TransactionFormProps {
 
 type IncomeExpense = "income" | "expense";
 
+interface CategoryItem {
+  label: IncomeCategory | ExpenseCategory;
+  icon: JSX.Element;
+}
+
 const TransactionForm = ({
   onCloseForm,
   isEntryDrawerOpen,
   currentDay,
 }: TransactionFormProps) => {
   const formWidth = 320;
+
+  const expenseCategories: CategoryItem[] = [
+    { label: "食費", icon: <FastfoodIcon fontSize="small" /> },
+    { label: "日用品", icon: <AlarmIcon fontSize="small" /> },
+    { label: "住居費", icon: <AddHomeIcon fontSize="small" /> },
+    { label: "交際費", icon: <Diversity3Icon fontSize="small" /> },
+    { label: "交通費", icon: <TrainIcon fontSize="small" /> },
+    { label: "娯楽", icon: <SportsTennisIcon fontSize="small" /> },
+  ];
+
+  const incomeCategories: CategoryItem[] = [
+    { label: "給与", icon: <WorkIconIcon fontSize="small" /> },
+    { label: "副収入", icon: <AddBusinessIcon fontSize="small" /> },
+    { label: "銀行振込", icon: <HouseSidingIcon fontSize="small" /> },
+    { label: "お小遣い", icon: <SavingsIcon fontSize="small" /> },
+  ];
 
   const { control, setValue, watch } = useForm({
     defaultValues: {
