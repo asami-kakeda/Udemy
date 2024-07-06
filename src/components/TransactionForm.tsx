@@ -181,6 +181,8 @@ const TransactionForm = ({
                 InputLabelProps={{
                   shrink: true,
                 }}
+                error={!!errors.date}
+                helperText={errors.date?.message}
               />
             )}
           />
@@ -190,9 +192,16 @@ const TransactionForm = ({
             name="category"
             control={control}
             render={({ field }) => (
-              <TextField {...field} id="カテゴリ" label="カテゴリ" select>
-                {categories.map((category) => (
-                  <MenuItem value={category.label}>
+              <TextField
+                {...field}
+                id="カテゴリ"
+                label="カテゴリ"
+                select
+                error={!!errors.category}
+                helperText={errors.category?.message}
+              >
+                {categories.map((category, index) => (
+                  <MenuItem value={category.label} key={index}>
                     <ListItemIcon>{category.icon}</ListItemIcon>
                     {category.label}
                   </MenuItem>
@@ -213,6 +222,8 @@ const TransactionForm = ({
                   const newValue = parseInt(e.target.value, 10) || 0;
                   field.onChange(newValue);
                 }}
+                error={!!errors.amount}
+                helperText={errors.amount?.message}
                 label="金額"
                 type="number"
               />
@@ -223,7 +234,13 @@ const TransactionForm = ({
             name="content"
             control={control}
             render={({ field }) => (
-              <TextField {...field} label="内容" type="text" />
+              <TextField
+                {...field}
+                label="内容"
+                type="text"
+                error={!!errors.content}
+                helperText={errors.content?.message}
+              />
             )}
           />
 
