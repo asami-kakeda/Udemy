@@ -9,10 +9,11 @@ import { theme } from "./theme/theme";
 import { ThemeProvider } from "@emotion/react";
 import { CssBaseline } from "@mui/material";
 import { Transaction } from "./types/index";
-import { collection, getDocs } from "firebase/firestore";
+import { addDoc, collection, getDocs } from "firebase/firestore";
 import { db } from "./firebase";
 import { format } from "date-fns";
 import { formatMonth } from "./utils/formatting";
+import { Schema } from "./validations/schema";
 
 function App() {
   // Firestoreエラーがどうか判断する型ガード
@@ -55,6 +56,21 @@ function App() {
     return transaction.date.startsWith(formatMonth(currentMonth));
   });
 
+  const handleSaveTransaction = async (transaction: Schema) => {
+    try {
+      // Add a new document with a generated id.
+      const docRef = await addDoc(collection(db, "Transactions"), transaction);
+      console.log("Document written with ID: ", docRef.id);
+    } catch (err) {
+      if (isFireStoreError(err)) {
+        console.error("firestoreのエラーは", err);
+      } else {
+        console.error("一般的なエラーは", err);
+      }
+      //error
+    }
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -67,6 +83,7 @@ function App() {
                 <Home
                   monthlyTransactions={monthlyTransactions}
                   setCurrentMont={setCurrentMont}
+                  onSaveTransaction={handleSaveTransaction}
                 />
               }
             />
