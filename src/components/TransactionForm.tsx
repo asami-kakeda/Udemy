@@ -26,6 +26,7 @@ import SavingsIcon from "@mui/icons-material/Savings";
 import HouseSidingIcon from "@mui/icons-material/HouseSiding";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Schema, transactionSchema } from "../validations/schema";
+
 interface TransactionFormProps {
   onCloseForm: () => void;
   isEntryDrawerOpen: boolean;
@@ -72,6 +73,7 @@ const TransactionForm = ({
     watch,
     formState: { errors },
     handleSubmit,
+    reset,
   } = useForm<Schema>({
     defaultValues: {
       type: "expense",
@@ -85,6 +87,7 @@ const TransactionForm = ({
 
   const incomeExpenseToggle = (type: IncomeExpense) => {
     setValue("type", type);
+    setValue("category", "");
   };
   const currentType = watch("type");
   console.log(currentType);
@@ -102,6 +105,14 @@ const TransactionForm = ({
 
   const onSubmit: SubmitHandler<Schema> = (data) => {
     onSaveTransaction(data);
+
+    reset({
+      type: "expense",
+      date: currentDay,
+      amount: 0,
+      category: "",
+      content: "",
+    });
   };
 
   return (
