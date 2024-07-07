@@ -14,7 +14,7 @@ import CloseIcon from "@mui/icons-material/Close"; // 閉じるボタン用の�
 import FastfoodIcon from "@mui/icons-material/Fastfood"; //食事アイコン
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { co } from "@fullcalendar/core/internal-common";
-import { ExpenseCategory, IncomeCategory } from "../types";
+import { ExpenseCategory, IncomeCategory, Transaction } from "../types";
 import AlarmIcon from "@mui/icons-material/Alarm";
 import AddHomeIcon from "@mui/icons-material/AddHome";
 import Diversity3Icon from "@mui/icons-material/Diversity3";
@@ -32,6 +32,7 @@ interface TransactionFormProps {
   isEntryDrawerOpen: boolean;
   currentDay: string;
   onSaveTransaction: (transaction: Schema) => Promise<void>;
+  selectedTransaction: Transaction | null;
 }
 
 type IncomeExpense = "income" | "expense";
@@ -46,6 +47,7 @@ const TransactionForm = ({
   isEntryDrawerOpen,
   currentDay,
   onSaveTransaction,
+  selectedTransaction,
 }: TransactionFormProps) => {
   const formWidth = 320;
 
@@ -114,6 +116,24 @@ const TransactionForm = ({
       content: "",
     });
   };
+
+  useEffect(() => {
+    if (selectedTransaction) {
+      setValue("type", selectedTransaction.type);
+      setValue("date", selectedTransaction.date);
+      setValue("amount", selectedTransaction.amount);
+      setValue("category", selectedTransaction.category);
+      setValue("content", selectedTransaction.content);
+    } else {
+      reset({
+        type: "expense",
+        date: currentDay,
+        amount: 0,
+        category: "",
+        content: "",
+      });
+    }
+  }, [selectedTransaction]);
 
   return (
     <Box

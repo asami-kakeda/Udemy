@@ -25,6 +25,9 @@ function App() {
 
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [currentMonth, setCurrentMont] = useState(new Date());
+  const [selectedTransaction, setSelectedTransaction] =
+    useState<Transaction | null>(null);
+
   format(currentMonth, "yyyy-MM");
 
   useEffect(() => {
@@ -93,6 +96,8 @@ function App() {
                   monthlyTransactions={monthlyTransactions}
                   setCurrentMont={setCurrentMont}
                   onSaveTransaction={handleSaveTransaction}
+                  setSelectedTransaction={setSelectedTransaction}
+                  selectedTransaction={selectedTransaction}
                 />
               }
             />
