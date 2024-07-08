@@ -15,6 +15,7 @@ import {
   deleteDoc,
   doc,
   getDocs,
+  updateDoc,
 } from "firebase/firestore";
 import { db } from "./firebase";
 import { format } from "date-fns";
@@ -105,6 +106,25 @@ function App() {
     }
   };
 
+  const handleUpdateTransaction = async (
+    transaction: Schema,
+    transactionId: string
+  ) => {
+    //firesとれ更新処理
+    try {
+      const docRef = doc(db, "Transactions", transactionId);
+
+      // Set the "capital" field of the city 'DC'
+      await updateDoc(docRef, transaction);
+    } catch (err) {
+      if (isFireStoreError(err)) {
+        console.error("firestoreのエラーは", err);
+      } else {
+        console.error("一般的なエラーは", err);
+      }
+    }
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -119,6 +139,7 @@ function App() {
                   setCurrentMont={setCurrentMont}
                   onSaveTransaction={handleSaveTransaction}
                   onDeleteTransaction={handleDeleteTransaction}
+                  onUpdateTransaction={handleUpdateTransaction}
                 />
               }
             />
