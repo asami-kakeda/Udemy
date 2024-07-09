@@ -1,9 +1,10 @@
 import { Grid, Paper } from "@mui/material";
 import React from "react";
-import MonthSelecter from "../components/layout/MonthSelecter";
+import MonthSelecter from "../components/layout/MonthSelector";
 import CategoryChart from "../components/layout/CategoryChart";
 import BarChart from "../components/layout/BarChart";
 import TransactionTable from "../components/layout/TransactionTable";
+import MonthSelector from "../components/layout/MonthSelector";
 
 const Report = () => {
   const commonPaperStyle = {
@@ -15,7 +16,7 @@ const Report = () => {
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
-        <MonthSelecter />
+        <MonthSelector />
       </Grid>
       <Grid item xs={12} md={4}>
         <Paper sx={commonPaperStyle}>
