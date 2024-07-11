@@ -21,7 +21,6 @@ import { db } from "./firebase";
 import { format } from "date-fns";
 import { formatMonth } from "./utils/formatting";
 import { Schema } from "./validations/schema";
-import { aC } from "@fullcalendar/core/internal-common";
 
 function App() {
   // Firestoreエラーがどうか判断する型ガード
@@ -32,7 +31,7 @@ function App() {
   }
 
   const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [currentMonth, setCurrentMont] = useState(new Date());
+  const [currentMonth, setCurrentMonth] = useState(new Date());
 
   format(currentMonth, "yyyy-MM");
 
@@ -142,14 +141,22 @@ function App() {
               element={
                 <Home
                   monthlyTransactions={monthlyTransactions}
-                  setCurrentMont={setCurrentMont}
+                  setCurrentMonth={setCurrentMonth}
                   onSaveTransaction={handleSaveTransaction}
                   onDeleteTransaction={handleDeleteTransaction}
                   onUpdateTransaction={handleUpdateTransaction}
                 />
               }
             />
-            <Route path="/report" element={<Report />} />
+            <Route
+              path="/report"
+              element={
+                <Report
+                  currentMonth={currentMonth}
+                  setCurrentMonth={setCurrentMonth}
+                />
+              }
+            />
             <Route path="*" element={<NoMatch />} />
           </Route>
         </Routes>
