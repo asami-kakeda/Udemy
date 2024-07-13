@@ -21,7 +21,7 @@ const Report = ({
   isLoading,
 }: ReportProps) => {
   const commonPaperStyle = {
-    height: { xs: "auto", md: "400px" },
+    height: "400px",
     display: "flex",
     flexDirection: "column",
     p: 2,
