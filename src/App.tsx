@@ -23,15 +23,16 @@ import { formatMonth } from "./utils/formatting";
 import { Schema } from "./validations/schema";
 
 function App() {
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [isLoading, setIsLoading] = useState(true);
+
   // Firestoreエラーがどうか判断する型ガード
   function isFireStoreError(
     err: unknown
   ): err is { code: string; message: string } {
     return typeof err === "object" && err !== null && "code" in err;
   }
-
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [currentMonth, setCurrentMonth] = useState(new Date());
 
   format(currentMonth, "yyyy-MM");
 
@@ -54,7 +55,8 @@ function App() {
         } else {
           console.error("一般的なエラーは", err);
         }
-        //error
+      } finally {
+        setIsLoading(false);
       }
     };
     fecheTransactions();
@@ -155,6 +157,7 @@ function App() {
                   currentMonth={currentMonth}
                   setCurrentMonth={setCurrentMonth}
                   monthlyTransactions={monthlyTransactions}
+                  isLoading={isLoading}
                 />
               }
             />
