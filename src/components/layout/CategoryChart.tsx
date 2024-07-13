@@ -17,6 +17,7 @@ import {
   SelectChangeEvent,
   TextField,
   Typography,
+  useTheme,
 } from "@mui/material";
 import {
   ExpenseCategory,
@@ -36,6 +37,7 @@ const CategoryChart = ({
   monthlyTransactions,
   isLoading,
 }: CategoryChartProps) => {
+  const theme = useTheme();
   const [selectedType, setSelectedType] = useState<TransactionType>("expense");
 
   const handleChange = (e: SelectChangeEvent<TransactionType>) => {
@@ -56,7 +58,10 @@ const CategoryChart = ({
     );
   console.log(categorySums);
 
-  const categoryLabels = Object.keys(categorySums);
+  const categoryLabels = Object.keys(categorySums) as (
+    | IncomeCategory
+    | ExpenseCategory
+  )[];
   const categoryValues = Object.values(categorySums);
 
   console.log(categoryLabels);
@@ -68,14 +73,44 @@ const CategoryChart = ({
     plugins: {},
   };
 
+  const incomeCategoryColor: Record<IncomeCategory, string> = {
+    給与: theme.palette.incomeCategoryColor.給与,
+    副収入: theme.palette.incomeCategoryColor.副収入,
+    お小遣い: theme.palette.incomeCategoryColor.お小遣い,
+  };
+
+  const expenseCategoryColor: Record<ExpenseCategory, string> = {
+    食費: theme.palette.expenseCategoryColor.食費,
+    日用品: theme.palette.expenseCategoryColor.日用品,
+    住居費: theme.palette.expenseCategoryColor.住居費,
+    交際費: theme.palette.expenseCategoryColor.交際費,
+    娯楽: theme.palette.expenseCategoryColor.娯楽,
+    交通費: theme.palette.expenseCategoryColor.交通費,
+    銀行振込: theme.palette.expenseCategoryColor.銀行振込,
+  };
+
+  const getCategoryColor = (
+    category: IncomeCategory | ExpenseCategory
+  ): string => {
+    if (selectedType === "income") {
+      return incomeCategoryColor[category as IncomeCategory];
+    } else {
+      return expenseCategoryColor[category as ExpenseCategory];
+    }
+  };
+
   const data: ChartData<"pie"> = {
     labels: categoryLabels,
     datasets: [
       {
         data: categoryValues,
-        backgroundColor: ["#4169e1", "#ff1493", "#FFCE56"],
-        hoverBackgroundColor: ["#36A2EB", "#FF6384", "#FFCE56"],
-        borderColor: ["transparent", "transparent", "transparent"],
+        backgroundColor: categoryLabels.map((category) =>
+          getCategoryColor(category)
+        ),
+
+        borderColor: categoryLabels.map((category) =>
+          getCategoryColor(category)
+        ),
       },
     ],
   };
