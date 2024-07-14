@@ -1,5 +1,5 @@
 import * as React from "react";
-import { alpha } from "@mui/material/styles";
+import { alpha, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -20,6 +20,9 @@ import Switch from "@mui/material/Switch";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
+import { Transaction } from "../../types";
+import { financeCalculations } from "../../utils/financeCalculations";
+import { Grid } from "@mui/material";
 
 interface Data {
   id: number;
@@ -147,7 +150,7 @@ const headCells: readonly HeadCell[] = [
   },
 ];
 
-interface EnhancedTableProps {
+interface TransactionTableHeadProps {
   numSelected: number;
   onRequestSort: (
     event: React.MouseEvent<unknown>,
@@ -159,7 +162,7 @@ interface EnhancedTableProps {
   rowCount: number;
 }
 
-function EnhancedTableHead(props: EnhancedTableProps) {
+function TransactionTableHead(props: TransactionTableHeadProps) {
   const {
     onSelectAllClick,
     order,
@@ -213,11 +216,11 @@ function EnhancedTableHead(props: EnhancedTableProps) {
   );
 }
 
-interface EnhancedTableToolbarProps {
+interface TransactionTableToolbarProps {
   numSelected: number;
 }
 
-function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
+function TransactionTableToolbar(props: TransactionTableToolbarProps) {
   const { numSelected } = props;
 
   return (
@@ -269,7 +272,30 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
     </Toolbar>
   );
 }
-export default function EnhancedTable() {
+
+interface FinancialItemProps {
+  title: string;
+  value: number;
+  color: string;
+}
+
+function FinancialItem({ title, value, color }: FinancialItemProps) {
+  return (
+    <Grid item>
+      <Typography>{title}</Typography>
+      <Typography sx={{ color: color }}>¥{value}</Typography>
+    </Grid>
+  );
+}
+
+interface TransactionTableProps {
+  monthlyTransactions: Transaction[];
+}
+
+export default function TransactionTable({
+  monthlyTransactions,
+}: TransactionTableProps) {
+  const theme = useTheme();
   const [order, setOrder] = React.useState<Order>("asc");
   const [orderBy, setOrderBy] = React.useState<keyof Data>("calories");
   const [selected, setSelected] = React.useState<readonly number[]>([]);
@@ -344,17 +370,36 @@ export default function EnhancedTable() {
     [order, orderBy, page, rowsPerPage]
   );
 
+  const { income, expense, balance } = financeCalculations(monthlyTransactions);
+  console.log(income, expense, balance);
   return (
     <Box sx={{ width: "100%" }}>
       <Paper sx={{ width: "100%", mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+        <Grid container>
+          <FinancialItem
+            title={"収入"}
+            value={income}
+            color={theme.palette.incomeColor.main}
+          />
+          <FinancialItem
+            title={"支出"}
+            value={expense}
+            color={theme.palette.expenseColor.main}
+          />
+          <FinancialItem
+            title={"残高"}
+            value={balance}
+            color={theme.palette.balanceColor.main}
+          />
+        </Grid>
+        <TransactionTableToolbar numSelected={selected.length} />
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
             aria-labelledby="tableTitle"
             size={dense ? "small" : "medium"}
           >
-            <EnhancedTableHead
+            <TransactionTableHead
               numSelected={selected.length}
               order={order}
               orderBy={orderBy}
@@ -424,10 +469,10 @@ export default function EnhancedTable() {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
-      <FormControlLabel
+      {/* <FormControlLabel
         control={<Switch checked={dense} onChange={handleChangeDense} />}
         label="Dense padding"
-      />
+      /> */}
     </Box>
   );
 }
