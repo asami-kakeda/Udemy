@@ -36,6 +36,7 @@ const Home = ({
     useState<Transaction | null>(null);
 
   const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down(`lg`));
 
@@ -45,24 +46,35 @@ const Home = ({
   });
 
   const closeForm = () => {
-    setIsEntryDrawerOpen(!isEntryDrawerOpen);
     setSelectedTransaction(null);
-  };
-
-  //フォームの開閉処理
-  const handleAddTransactionForm = () => {
-    if (selectedTransaction) {
-      setSelectedTransaction(null);
+    if (isMobile) {
+      setIsDialogOpen(!isDialogOpen);
     } else {
       setIsEntryDrawerOpen(!isEntryDrawerOpen);
     }
   };
 
+  //フォームの開閉処理
+  const handleAddTransactionForm = () => {
+    if (isMobile) {
+      setIsDialogOpen(true);
+    } else {
+      if (selectedTransaction) {
+        setSelectedTransaction(null);
+      } else {
+        setIsEntryDrawerOpen(!isEntryDrawerOpen);
+      }
+    }
+  };
+
   //取引が選択された時の処理
   const handlSelectTransaction = (transaction: Transaction) => {
-    console.log(transaction);
-    setIsEntryDrawerOpen(true);
     setSelectedTransaction(transaction);
+    if (isMobile) {
+      setIsDialogOpen(true);
+    } else {
+      setIsEntryDrawerOpen(true);
+    }
   };
 
   const handleCloseMobileDrawer = () => {
@@ -109,6 +121,9 @@ const Home = ({
           onDeleteTransaction={onDeleteTransaction}
           setSelectedTransaction={setSelectedTransaction}
           onUpdateTransaction={onUpdateTransaction}
+          isMobile={isMobile}
+          isDialogOpen={isDialogOpen}
+          setIsDialogOpen={setIsDialogOpen}
         />
       </Box>
     </Box>
